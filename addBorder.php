@@ -1,114 +1,192 @@
-
 <?php include 'inc/header.php'; ?>
-    <!-- Sidebar menu-->
-    <aside class="app-sidebar">
-      <?php include 'inc/sidebar.php'; ?>
-    </aside>
-    <main class="app-content">
-	<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-      <div class="app-title">
+<!-- Sidebar menu-->
+<aside class="app-sidebar">
+    <?php include 'inc/sidebar.php'; ?>
+</aside>
+<main class="app-content">
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <div class="app-title">
         <div>
-          <h1><i class="fa fa-dashboard"></i> Add Border</h1>
-          <p></p>
+            <h1><i class="fa fa-dashboard"></i> Add Border</h1>
+            <p></p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
-          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
         </ul>
     </div>
-	<div class="row">
-	<div class="col-md-7">
-      <div class="tile">
-        <!-- <h3 class="tile-title">Register</h3> -->
-        <form class="form-horizontal">
-          <div class="tile-body">
-            <div class="form-group row">
-              <label class="control-label col-md-3">Name</label>
-              <div class="col-md-8">
-                <input class="form-control" type="text" placeholder="Enter full name">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Room</label>
-              <div class="col-md-8">
-                <select name="" class="form-control">
-                	<option value="">Select Room</option>
-                	<option value="">Select Room 2</option>
-                	<option value="">Select Room 3</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Email</label>
-              <div class="col-md-8">
-                <input class="form-control" type="email" placeholder="Enter email address">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Contact No.</label>
-              <div class="col-md-8">
-                <input class="form-control" type="text" placeholder="+8801010101010">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Present Address</label>
-              <div class="col-md-8">
-                <textarea class="form-control" rows="3" placeholder="Enter your present address"></textarea>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Parmanent Address</label>
-              <div class="col-md-8">
-                <textarea class="form-control" rows="3" placeholder="Enter your permanent address"></textarea>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">NID No.</label>
-              <div class="col-md-8">
-                <input class="form-control" type="text" placeholder="Enter NID Number">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Gender</label>
-              <div class="col-md-9">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="gender">Male
-                  </label>
+
+<?php
+
+    $stmt = $connection->prepare("SELECT * FROM `rooms`");
+    $stmt->execute();
+    $rooms = $stmt->fetchAll();
+
+    if(isset($_POST['add_border'])){
+        $name = $_POST['name'];
+        $room_id = $_POST['room_id'];
+        $email = $_POST['email'];
+        $contact = $_POST['contact'];
+        $pre_address = $_POST['pre_address'];
+        $perma_address = $_POST['perma_address'];
+        $nid = $_POST['nid'];
+
+        $photo = $_FILES['photo']['name'];
+        $photo_tmp = $_FILES['photo']['tmp_name'];
+        move_uploaded_file($photo_tmp,"img/borders/$photo");
+
+        $emr_contact = $_POST['emr_contact'];
+        $errors = [];
+        $msgs = [];
+
+        //Validation Check 
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+        $errors[] = "Invalid Email Format";
+        }
+
+        if (empty($errors)) {
+            $query = $connection->prepare("INSERT INTO `borders`(`name`,`room_id`,`email`,`contact`,`pre_address`,`perma_address`,`nid`,`photo`,`emr_contact`) VALUES(:name,:room_id,:email,:contact,:pre_address,:perma_address,:nid,:photo,:emr_contact)");
+            $query->bindValue(':name',$name);
+            $query->bindValue('room_id', $room_id);
+            $query->bindValue(':email', $email);
+            $query->bindValue(':contact', $contact);
+            $query->bindValue(':pre_address', $pre_address);
+            $query->bindValue(':perma_address', $perma_address);
+            $query->bindValue(':nid', $nid);
+            $query->bindValue(':photo', $photo);
+            $query->bindValue(':emr_contact', $emr_contact);
+            $query->execute();
+
+            $msgs[] = "Border Added Successfully !";
+        }else{
+            $errors[] = "Border Not Added Successfully!";
+        }
+
+
+    }
+    
+?>
+
+    <div class="row">
+        <div class="col-md-7">
+            <?php if (!empty($msgs)) { ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php foreach ($msgs as $msg): ?>
+                        <strong><?php echo $msg; ?></strong>
+                    <?php endforeach; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="gender">Female
-                  </label>
+            <?php } ?>
+            <?php if (!empty($errors)){ ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php foreach ($errors as $error): ?>
+                        <strong><?php echo $error; ?></strong>
+                    <?php endforeach; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-              </div>
+            <?php } ?>
+            <div class="tile">
+                <!-- <h3 class="tile-title">Register</h3> -->
+                <form class="form-horizontal" action="addBorder.php" method="post" enctype="multipart/form-data">
+                    <div class="tile-body">
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Name</label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="name" type="text" placeholder="Enter full name" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Room</label>
+                            <div class="col-md-8">
+                                <select name="room_id" class="form-control" required="required">
+                                    <option">Select Room</option>
+                                    <?php foreach ($rooms as $value): ?>
+                                        <option value="<?php echo $value['room_id']; ?>"> Room <?php echo $value['room_id']; ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Email</label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="email" type="email" placeholder="Enter email address" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Contact No.</label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="contact" type="number" placeholder="+8801010101010" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Present Address</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" name="pre_address" rows="3" placeholder="Enter your present address" required="required"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Parmanent Address</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" name="perma_address" rows="3" placeholder="Enter your permanent address" required="required"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">NID No.</label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="nid" type="number" placeholder="Enter NID Number" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Emergency Contact</label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="emr_contact" type="number" placeholder="Enter NID Number" required="required">
+                            </div>
+                        </div>
+                       <!-- <div class="form-group row">
+                            <label class="control-label col-md-3">Gender</label>
+                            <div class="col-md-9">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="gender">Male
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="gender">Female
+                                    </label>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3">Identity Proof</label>
+                            <div class="col-md-8">
+                                <input class="form-control" name="photo" type="file" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-8 col-md-offset-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox">I accept the terms and conditions
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-footer">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-3">
+                                <button class="btn btn-primary" name="add_border" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="reset"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-group row">
-              <label class="control-label col-md-3">Identity Proof</label>
-              <div class="col-md-8">
-                <input class="form-control" type="file">
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-md-8 col-md-offset-3">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox">I accept the terms and conditions
-                  </label>
-                </div>
-              </div>
-            </div>
-	        </div>
-	        <div class="tile-footer">
-	          <div class="row">
-	            <div class="col-md-8 col-md-offset-3">
-	              <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="reset"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</button>
-	            </div>
-	          </div>
-	        </div>
-	    </form>
-      </div>
+        </div>
     </div>
-</div>
 </main>
 <?php include 'inc/footer.php'; ?>

@@ -1,101 +1,101 @@
 <?php include 'inc/header.php'; ?>
-    <!-- Sidebar menu-->
-    <aside class="app-sidebar">
-      <?php include 'inc/sidebar.php'; ?>
-    </aside>
-    <main class="app-content">
-      <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-      <div class="app-title">
+<!-- Sidebar menu-->
+<aside class="app-sidebar">
+    <?php include 'inc/sidebar.php'; ?>
+</aside>
+<main class="app-content">
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <div class="app-title">
         <div>
-          <h1><i class="fa fa-edit"></i> Custom Form Elements</h1>
-          <p>Customized form elements</p>
+            <h1><i class="fa fa-edit"></i> Custom Form Elements</h1>
+            <p>Customized form elements</p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
-          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item">Forms</li>
-          <li class="breadcrumb-item"><a href="#">Custom Componants</a></li>
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item">Forms</li>
+            <li class="breadcrumb-item"><a href="#">Custom Componants</a></li>
         </ul>
-      </div>
-      <div class="row">
+    </div>
+    <div class="row">
         <div class="col-md-6">
-          <div class="tile">
-            <h3 class="tile-title">Animated Checkbox and Radio Buttons</h3>
-            <!--Radio Button Markup-->
-            <div class="animated-radio-button">
-              <label>
+            <div class="tile">
+                <h3 class="tile-title">Animated Checkbox and Radio Buttons</h3>
+                <!--Radio Button Markup-->
+                <div class="animated-radio-button">
+                    <label>
                 <input type="radio"><span class="label-text">Radio Button</span>
               </label>
-            </div>
-            <!--Checkbox Markup-->
-            <div class="animated-checkbox">
-              <label>
+                </div>
+                <!--Checkbox Markup-->
+                <div class="animated-checkbox">
+                    <label>
                 <input type="checkbox"><span class="label-text">Checkbox</span>
               </label>
-            </div>
-            <h4>Disabled state</h4>
-            <div class="animated-radio-button">
-              <label>
+                </div>
+                <h4>Disabled state</h4>
+                <div class="animated-radio-button">
+                    <label>
                 <input type="radio" disabled=""><span class="label-text">Radio Button</span>
               </label>
-            </div>
-            <div class="animated-checkbox">
-              <label>
+                </div>
+                <div class="animated-checkbox">
+                    <label>
                 <input type="checkbox" disabled=""><span class="label-text">Checkbox</span>
               </label>
+                </div>
             </div>
-          </div>
         </div>
         <div class="col-md-6">
-          <div class="tile">
-            <h3 class="tile-title">Animated Toggle Button</h3>
-            <div class="row">
-              <div class="col-md-6">
-                <p><b>Toggle Button</b></p>
-                <div class="toggle">
-                  <label>
+            <div class="tile">
+                <h3 class="tile-title">Animated Toggle Button</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><b>Toggle Button</b></p>
+                        <div class="toggle">
+                            <label>
                     <input type="checkbox"><span class="button-indecator"></span>
                   </label>
-                </div>
-                <div class="toggle lg">
-                  <label>
+                        </div>
+                        <div class="toggle lg">
+                            <label>
                     <input type="checkbox"><span class="button-indecator"></span>
                   </label>
-                </div>
-                <h5>Disabled state</h5>
-                <div class="toggle">
-                  <label>
+                        </div>
+                        <h5>Disabled state</h5>
+                        <div class="toggle">
+                            <label>
                     <input type="checkbox" disabled=""><span class="button-indecator"></span>
                   </label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <p><b>Fliping Toggle Button</b></p>
-                <div class="toggle-flip">
-                  <label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p><b>Fliping Toggle Button</b></p>
+                        <div class="toggle-flip">
+                            <label>
                     <input type="checkbox"><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
                   </label>
-                </div>
-                <h5>Disabled state</h5>
-                <div class="toggle-flip">
-                  <label>
+                        </div>
+                        <h5>Disabled state</h5>
+                        <div class="toggle-flip">
+                            <label>
                     <input type="checkbox" disabled=""><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
                   </label>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
         <div class="clearfix"></div>
         <div class="col-md-6">
-          <div class="tile">
-            <div class="tile-title-w-btn">
-              <h3 class="title">Select2</h3>
-              <p><a class="btn btn-primary icon-btn" href="https://select2.github.io/examples.html" target="_blank"><i class="fa fa-file"></i>Docs</a></p>
-            </div>
-            <div class="tile-body">
-              <p>This plugin can be used to convert select element into advanced componant.</p>
-              <h4>Demo</h4>
-              <select class="form-control" id="demoSelect" multiple="">
+            <div class="tile">
+                <div class="tile-title-w-btn">
+                    <h3 class="title">Select2</h3>
+                    <p><a class="btn btn-primary icon-btn" href="https://select2.github.io/examples.html" target="_blank"><i class="fa fa-file"></i>Docs</a></p>
+                </div>
+                <div class="tile-body">
+                    <p>This plugin can be used to convert select element into advanced componant.</p>
+                    <h4>Demo</h4>
+                    <select class="form-control" id="demoSelect" multiple="">
                 <optgroup label="Select Cities">
                   <option>Ahmedabad</option>
                   <option>Surat</option>
@@ -121,22 +121,22 @@
                   <option>Kapadwanj</option>
                 </optgroup>
               </select>
+                </div>
             </div>
-          </div>
         </div>
         <div class="col-md-6">
-          <div class="tile">
-            <div class="tile-title-w-btn">
-              <h3 class="title">Date Picker</h3>
-              <p><a class="btn btn-primary icon-btn" href="http://bootstrap-datepicker.readthedocs.org/en/stable/options.html" target="_blank"><i class="fa fa-file"></i>Docs</a></p>
+            <div class="tile">
+                <div class="tile-title-w-btn">
+                    <h3 class="title">Date Picker</h3>
+                    <p><a class="btn btn-primary icon-btn" href="http://bootstrap-datepicker.readthedocs.org/en/stable/options.html" target="_blank"><i class="fa fa-file"></i>Docs</a></p>
+                </div>
+                <div class="tile-body">
+                    <p>This plugin can be used to let the user select the date in a convinient way.</p>
+                    <h4>Demo</h4>
+                    <input class="form-control" id="demoDate" type="text" placeholder="Select Date">
+                </div>
             </div>
-            <div class="tile-body">
-              <p>This plugin can be used to let the user select the date in a convinient way.</p>
-              <h4>Demo</h4>
-              <input class="form-control" id="demoDate" type="text" placeholder="Select Date">
-            </div>
-          </div>
         </div>
-      </div>
-    </main>
+    </div>
+</main>
 <?php include 'inc/footer.php'; ?>
