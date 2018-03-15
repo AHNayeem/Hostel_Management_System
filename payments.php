@@ -15,61 +15,131 @@
             <li class="breadcrumb-item"><a href="#">Payments</a></li>
         </ul>
     </div>
+
+    <?php 
+    $border = $connection->prepare("SELECT `border_id`, `name` FROM `borders`");
+    $border->execute();
+    $border = $border->fetchAll();
+
+    $room = $connection->prepare("SELECT `room_id` FROM `rooms`");
+    $room->execute();
+    $room = $room->fetchAll();
+
+
+    if (isset($_POST['pay_btn'])) {
+       $border = $_POST['border_id'];
+       $room = $_POST['room_id'];
+       $month = $_POST['month'];
+       $pay_amount = $_POST['pay_amount'];
+       $errors = [];
+       $msgs = [];
+
+       //check validation
+       //
+       //if no errors
+       if (empty($errors)) {
+           $query = $connection->prepare("INSERT INTO `payment`(`border_id`,`room_id`,`month`,`amount`) VALUES(:border_id,:room_id,:month,:amount)");
+           $query->bindValue(':border_id',$border);
+           $query->bindValue(':room_id',$room);
+           $query->bindValue(':month',$month);
+           $query->bindValue(':amount',$pay_amount);
+           $query->execute();
+
+           $msgs[] = "Payment Added Successfully !";
+       }else {
+           $errors[] = "Payment Not Added Successfully !";
+       }
+
+    }
+
+    ?>
     <div class="row">
         <div class="col-md-12">
+            <?php if (!empty($msgs)) { ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php foreach ($msgs as $msg): ?>
+                        <strong><?php echo $msg; ?></strong>
+                    <?php endforeach; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php } ?>
+            <?php if (!empty($errors)){ ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php foreach ($errors as $error): ?>
+                        <strong><?php echo $error; ?></strong>
+                    <?php endforeach; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php } ?>
             <div class="tile">
                 <!-- <h3 class="tile-title">Subscribe</h3> -->
+
                 <div class="tile-body">
-                    <form class="row">
+                    <form class="row" action="payments.php" method="post">
                         <div class="form-group">
                             <div class="col-md-12">
                                 <label class="control-label">Border</label>
-                                <select name="" class="form-control">
-                    <option value="">Border1</option>
-                    <option value="">Border2</option>
-                    <option value="">Border3</option>
-                    <option value="">Border4</option>
-	                	<option value="">Border5</option>
-	                </select>
+                                <select name="border_id" class="form-control">
+                                    <option>Select Border</option>
+                                    <?php foreach ($border as $value): ?>
+                                        <option value="<?php echo $value['border_id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach ?>
+            	                </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12">
                                 <label class="control-label">Room</label>
-                                <select name="" class="form-control">
-                    <option value="">Room1</option>
-                    <option value="">Room2</option>
-                    <option value="">Room3</option>
-                    <option value="">Room4</option>
-                  </select>
+                                <select name="room_id" class="form-control">
+                                    <option>Select Room</option>
+                                    <?php foreach ($room as $value): ?>
+                                        <option value="<?php echo $value['room_id']; ?>">Room <?php echo $value['room_id']; ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label class="control-label">Month Of</label>
+                                <select name="month" class="form-control">
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                              </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12">
-                                <label class="control-label">Month Of</label>
-                                <select name="" class="form-control">
-                    <option value="">January</option>
-                    <option value="">February</option>
-                    <option value="">March</option>
-                    <option value="">April</option>
-                    <option value="">May</option>
-                    <option value="">June</option>
-                    <option value="">July</option>
-                    <option value="">August</option>
-                    <option value="">September</option>
-                    <option value="">October</option>
-                    <option value="">November</option>
-                    <option value="">December</option>
-                  </select>
+                                <label class="control-label">Paid Amount</label>
+                                <input type="text" name="pay_amount" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="form-group col-md-2 align-self-end">
-                            <button class="btn btn-primary" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Add</button>
+                            <button class="btn btn-primary" name="pay_btn" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Add Payment</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <?php 
+            $stmt = $connection->prepare("SELECT * FROM `payment`");
+            $stmt->execute();
+            $payment = $stmt->fetchAll();
+        ?>
         <div class="col-md-12">
             <div class="tile">
                 <h3 class="tile-title">Payment Details</h3>
@@ -81,19 +151,30 @@
                                 <th>Border Name</th>
                                 <th>Room No.</th>
                                 <th>Month</th>
+                                <th>Paid Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
+                            <?php $i=1; foreach ($payment as $value): ?>
+                            <?php 
+                                $name = $connection->prepare("SELECT `name` FROM `borders` WHERE `border_id` = :border_id");
+                                $name->bindValue(':border_id', $value['border_id']);
+                                $name->execute();
+                                $name = $name->fetch();
+                            ?>
                             <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                <td><?php echo $i++ ?></td>
+                                <td><?php echo $name['name']; ?></td>
+                                <td>Room <?php echo $value['room_id']; ?></td>
+                                <td><?php echo $value['month']; ?></td>
+                                <td><?php echo $value['amount']; ?></td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Edit</button>&nbsp;&nbsp;<button class="btn btn-danger btn-sm" type="reset"><i class="fa fa-fw fa-lg fa-times-circle"></i>Delete</button>
                                 </td>
                             </tr>
+                            <?php endforeach ?>
                         </tbody>
                     </table>
                 </div>

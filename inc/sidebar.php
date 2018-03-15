@@ -11,6 +11,7 @@
         <ul class="treeview-menu">
             <li><a class="treeview-item" href="addBorder.php"><i class="icon fa fa-circle-o"></i>Add Border</a></li>
             <li><a class="treeview-item" href="borders.php"><i class="icon fa fa-circle-o"></i> Borers List</a></li>
+            <li><a class="treeview-item" href="Documents.php"><i class="icon fa fa-circle-o"></i> Borers Documents</a></li>
         </ul>
     </li>
     <li>

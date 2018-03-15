@@ -17,6 +17,13 @@
     </div>
 
 <?php
+    if (isset($_GET['border_id'])) {
+        $query = $connection->prepare("SELECT * FROM `borders` WHERE `border_id` = :border_id");
+        $query->bindValue(':border_id', $_GET['border_id'], PDO::PARAM_INT);
+        $query->execute();
+        $border = $query->fetch();
+    }
+
 
     $stmt = $connection->prepare("SELECT * FROM `rooms`");
     $stmt->execute();
@@ -159,13 +166,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="control-label col-md-3">Father's Name</label>
+                            <label class="control-label col-md-3">Father Name</label>
                             <div class="col-md-8">
                                 <input class="form-control" name="f_name" type="text" placeholder="Enter Father name" required="required">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="control-label col-md-3">Mother's Name</label>
+                            <label class="control-label col-md-3">Mother Name</label>
                             <div class="col-md-8">
                                 <input class="form-control" name="m_name" type="text" placeholder="Enter Mother name" required="required">
                             </div>

@@ -36,9 +36,10 @@
                                 <th>Phone</th>
                                 <th>Emer. Phone</th>
                                 <th>E-mail</th>
+                                <th>Father's Name</th>
+                                <th>Mother's Name</th>
                                 <th>Present Address</th>
                                 <th>Permanent Address</th>
-                                <th>NID No.</th>
                                 <th>Photo</th>
                                 <th>Action</th>
                             </tr>
@@ -52,9 +53,10 @@
                                 <td><?php echo $value['contact']; ?></td>
                                 <td><?php echo $value['emr_contact']; ?></td>
                                 <td><?php echo $value['email']; ?></td>
+                                <td><?php echo $value['f_name']; ?></td>
+                                <td><?php echo $value['m_name']; ?></td>
                                 <td><?php echo $value['pre_address']; ?></td>
                                 <td><?php echo $value['perma_address']; ?></td>
-                                <td><?php echo $value['nid']; ?></td>
                                 <td><img class="img-fluid" src="img/borders/<?php echo $value['photo']; ?>" alt=""></td>
                                 <td>
                                     <div class="btn-group">
