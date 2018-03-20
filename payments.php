@@ -26,11 +26,12 @@
     $room = $room->fetchAll();
 
 
+
     if (isset($_POST['pay_btn'])) {
        $border = $_POST['border_id'];
        $room = $_POST['room_id'];
        $month = $_POST['month'];
-       $pay_amount = $_POST['pay_amount'];
+       $paid_amount = $_POST['paid_amount'];
        $errors = [];
        $msgs = [];
 
@@ -38,11 +39,11 @@
        //
        //if no errors
        if (empty($errors)) {
-           $query = $connection->prepare("INSERT INTO `payment`(`border_id`,`room_id`,`month`,`amount`) VALUES(:border_id,:room_id,:month,:amount)");
+           $query = $connection->prepare("INSERT INTO `payment`(`border_id`,`room_id`,`month`,`paid_amount`) VALUES(:border_id,:room_id,:month,:paid_amount)");
            $query->bindValue(':border_id',$border);
            $query->bindValue(':room_id',$room);
            $query->bindValue(':month',$month);
-           $query->bindValue(':amount',$pay_amount);
+           $query->bindValue(':paid_amount',$paid_amount);
            $query->execute();
 
            $msgs[] = "Payment Added Successfully !";
@@ -125,7 +126,7 @@
                         <div class="form-group">
                             <div class="col-md-12">
                                 <label class="control-label">Paid Amount</label>
-                                <input type="text" name="pay_amount" class="form-control" placeholder="">
+                                <input type="text" name="paid_amount" class="form-control col-md-10" placeholder="">
                             </div>
                         </div>
                         <div class="form-group col-md-2 align-self-end">
@@ -151,7 +152,9 @@
                                 <th>Border Name</th>
                                 <th>Room No.</th>
                                 <th>Month</th>
+                                <th>Payable Amount</th>
                                 <th>Paid Amount</th>
+                                <th>Due Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -163,16 +166,37 @@
                                 $name->bindValue(':border_id', $value['border_id']);
                                 $name->execute();
                                 $name = $name->fetch();
+
+                                $bill = $connection->prepare("SELECT `total_payable` FROM `bills` WHERE `border_id` = :border_id");
+                                $bill->bindValue(':border_id', $value['border_id']);
+                                $bill->execute();
+                                $bill = $bill->fetch();
+
+                                $total = $bill['total_payable'];
+                                
+
                             ?>
                             <tr>
                                 <td><?php echo $i++ ?></td>
                                 <td><?php echo $name['name']; ?></td>
                                 <td>Room <?php echo $value['room_id']; ?></td>
                                 <td><?php echo $value['month']; ?></td>
-                                <td><?php echo $value['amount']; ?></td>
+                                <td><?php echo $total ?></td>
+                                <td><?php echo $value['paid_amount']; ?></td>
+                                <td><?php
+
+                                 $paid = $value['paid_amount']; 
+
+                                 $due = $total-$paid;
+                                 
+                                 if ($paid < $total) {
+                                     echo "<p class='badge badge-danger'> $due</p>";
+                                 }
+                                 
+                                 ?></td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Edit</button>&nbsp;&nbsp;<button class="btn btn-danger btn-sm" type="reset"><i class="fa fa-fw fa-lg fa-times-circle"></i>Delete</button>
-                                </td>
+                                    <a href="paidBills.php?pid=<?php echo $value['payment_id'];?>" class="btn btn-primary btn-sm text-white" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Paid</a>
+                                </td> 
                             </tr>
                             <?php endforeach ?>
                         </tbody>

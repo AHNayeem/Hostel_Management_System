@@ -60,8 +60,8 @@
                                 <td><img class="img-fluid" src="img/borders/<?php echo $value['photo']; ?>" alt=""></td>
                                 <td>
                                     <div class="btn-group">
-                                    <a class="btn btn-primary btn-sm" href="editBorder.php?border_id=<?php echo $value['border_id']; ?>"><i class="fa fa-fw fa-lg fa-check-circle"></i>Edit</a>
-                                    <a class="btn btn-danger btn-sm" href="deleteBorder.php?border_id=<?php echo $value['border_id']; ?>"><i class="fa fa-fw fa-lg fa-times-circle"></i>Delete</a>
+                                    <a class="btn btn-primary btn-sm" href="editBorder.php?border_id=<?php echo $value['border_id']; ?>"><i class="fa fa-fw fa-lg fa-edit"></i></a>
+                                    <a class="btn btn-danger btn-sm" href="borderDelete.php?border_id=<?php echo $value['border_id']; ?>"><i class="fa fa-fw fa-lg fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

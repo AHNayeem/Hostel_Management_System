@@ -15,27 +15,43 @@
             <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
         </ul>
     </div>
+
+<?php
+
+//Counting num of rooms
+$r_qry = $connection->prepare("SELECT COUNT(*)FROM `rooms`");
+$r_qry->execute();
+$r_num = $r_qry->fetchColumn();
+
+//Counting num of borders
+$r_qry = $connection->prepare("SELECT COUNT(*)FROM `borders`");
+$r_qry->execute();
+$b_num = $r_qry->fetchColumn();
+
+?>
+
+
     <div class="row">
         <div class="col-md-6 col-lg-3">
-            <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
+            <div class="widget-small primary coloured-icon"><i class="icon fa fa-bed fa-3x"></i>
                 <div class="info">
-                    <h4>Users</h4>
-                    <p><b>5</b></p>
+                    <h4>Rooms</h4>
+                    <p><b><?php echo $r_num ;?></b></p>
                 </div>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
-            <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <div class="widget-small info coloured-icon"><i class="icon fa fa-users fa-3x"></i>
                 <div class="info">
-                    <h4>Likes</h4>
-                    <p><b>25</b></p>
+                    <h4>Borders</h4>
+                    <p><b><?php echo $b_num ;?></b></p>
                 </div>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
             <div class="widget-small warning coloured-icon"><i class="icon fa fa-files-o fa-3x"></i>
                 <div class="info">
-                    <h4>Uploades</h4>
+                    <h4>Border Documents</h4>
                     <p><b>10</b></p>
                 </div>
             </div>

@@ -120,7 +120,7 @@
                         <div class="form-group row">
                             <label class="control-label col-md-3">Name</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="name" type="text" placeholder="Enter full name" required="required">
+                                <input class="form-control" name="name" type="text" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                         
@@ -138,49 +138,49 @@
                         <div class="form-group row">
                             <label class="control-label col-md-3">Email</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="email" type="email" placeholder="Enter email address" required="required">
+                                <input class="form-control" name="email" type="email" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Contact No.</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="contact" type="number" placeholder="+8801010101010" required="required">
+                                <input class="form-control" name="contact" type="number" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Present Address</label>
                             <div class="col-md-8">
-                                <textarea class="form-control" name="pre_address" rows="3" placeholder="Enter your present address" required="required"></textarea>
+                                <textarea class="form-control" name="pre_address" rows="3" value="<?php echo value['']; ?>" required="required"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Parmanent Address</label>
                             <div class="col-md-8">
-                                <textarea class="form-control" name="perma_address" rows="3" placeholder="Enter your permanent address" required="required"></textarea>
+                                <textarea class="form-control" name="perma_address" rows="3" value="<?php echo value['']; ?>" required="required"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">NID No.</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="nid" type="number" placeholder="Enter NID Number" required="required">
+                                <input class="form-control" name="nid" type="number" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Father Name</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="f_name" type="text" placeholder="Enter Father name" required="required">
+                                <input class="form-control" name="f_name" type="text" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Mother Name</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="m_name" type="text" placeholder="Enter Mother name" required="required">
+                                <input class="form-control" name="m_name" type="text" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Emergency Contact</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="emr_contact" type="number" placeholder="Emergency contact" required="required">
+                                <input class="form-control" name="emr_contact" type="number" value="<?php echo value['']; ?>" required="required">
                             </div>
                         </div>
                        <!-- <div class="form-group row">

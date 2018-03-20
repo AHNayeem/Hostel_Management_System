@@ -36,12 +36,15 @@
             $query->bindValue(':fare',$fare);
             $query->bindValue(':max_border',$max_border);
             $query->execute();
+        if($query->rowCount() === 1){
 
             $msgs[] = "Room Added Successfully !";
+            
         }else{
             $errors[] = "Room Not Added Successfully !";
         }
 
+    }
     }
 
     ?>
@@ -117,7 +120,7 @@
             <div class="tile">
                 <h3 class="tile-title">Room Details</h3>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table text-center">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -125,36 +128,40 @@
                                 <th>Attach Bath</th>
                                 <th>Fare</th>
                                 <th>Max Border</th>
+                                <th>Existing No. of Border</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <?php $i=1; foreach ($rooms as $value): ?>
-                                
-                            
+
                             <tr>
                                 <td><?php echo $i++; ?></td>
                                 <td><?php echo $value['room_desc']; ?></td>
                                 <td><?php echo $value['attach_bath']; ?></td>
                                 <td><?php echo $value['fare']; ?></td>
                                 <td><?php echo $value['max_border']; ?></td>
+                                <td><?php echo $value['existing_border']; ?></td>
                                 <td>
-                                    <?php if($value['status'] == 1){?>
-                                        <a href="editRooms.php?room_id=<?php echo $value['room_id'] ;?>">
-                                            <span class="badge badge-success">Available</span>
-                                        </a>
-                                    <?php }elseif($value['status'] == 0){ ?>
+                                    <?php if($value['status'] == 0){?>
+                                       
                                         <a href="editRooms.php?room_id=<?php echo $value['room_id'] ;?>">
                                             <span class="badge badge-danger">Not Available</span>
                                         </a>
+                                       
+                                    <?php }elseif($value['status'] == 1) {?>
+
+                                        <a href="editRooms.php?room_id=<?php echo $value['room_id'] ;?>">
+                                            <span class="badge badge-success">Available</span>
+                                        </a>
                                     <?php }?>
                                 </td>
-                                <td>
-                                    <a class="btn btn-primary btn-sm" href="<?php echo $value['room_id']; ?>"><i class="fa fa-fw fa-lg fa-check-circle"></i>Edit</a>&nbsp;&nbsp;<a class="btn btn-danger btn-sm" href="deleteRoom.php?room_id=<?php echo $value['room_id']; ?>"><i class="fa fa-fw fa-lg fa-times-circle"></i>Delete</a>
-                                </td>
+                                <!-- <td>
+                                    <a class="btn btn-primary btn-sm" href="<?php //echo $value['room_id']; ?>"><i class="fa fa-fw fa-lg fa-check-circle"></i>Edit</a>&nbsp;&nbsp;<a class="btn btn-danger btn-sm" href="deleteRoom.php?room_id=<?php //echo $value['room_id']; ?>"><i class="fa fa-fw fa-lg fa-times-circle"></i>Delete</a>
+                                </td> -->
                             </tr>
-                            <?php endforeach ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

@@ -17,7 +17,7 @@
     </div>
 
 <?php
-
+    
     $stmt = $connection->prepare("SELECT * FROM `rooms`");
     $stmt->execute();
     $rooms = $stmt->fetchAll();
@@ -48,38 +48,60 @@
 
         //Validation Check 
         if (filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
-        $errors[] = "Invalid Email Format";
+            $errors[] = "Invalid Email Format";
         }
 
-        if (empty($errors)) {
-            $query = $connection->prepare("INSERT INTO `borders`(`name`,`room_id`,`email`,`contact`,`pre_address`,`perma_address`,`nid`,`f_name`,`m_name`,`photo`,`emr_contact`) VALUES(:name,:room_id,:email,:contact,:pre_address,:perma_address,:nid,:f_name,:m_name,:photo,:emr_contact)");
-            $query->bindValue(':name',$name);
-            $query->bindValue('room_id', $room_id);
-            $query->bindValue(':email', $email);
-            $query->bindValue(':contact', $contact);
-            $query->bindValue(':pre_address', $pre_address);
-            $query->bindValue(':perma_address', $perma_address);
-            $query->bindValue(':nid', $nid);
-            $query->bindValue(':f_name', $f_name);
-            $query->bindValue(':m_name', $m_name);
-            $query->bindValue(':photo', $photo);
-            $query->bindValue(':emr_contact', $emr_contact);
-            $query->execute();
-            $border_id = $connection->lastInsertId();
+            if (empty($errors)) {
+                $query = $connection->prepare("INSERT INTO `borders`(`name`,`room_id`,`email`,`contact`,`pre_address`,`perma_address`,`nid`,`f_name`,`m_name`,`photo`,`emr_contact`) VALUES(:name,:room_id,:email,:contact,:pre_address,:perma_address,:nid,:f_name,:m_name,:photo,:emr_contact)");
+                $query->bindValue(':name',$name);
+                $query->bindValue(':room_id', $room_id);
+                $query->bindValue(':email', $email);
+                $query->bindValue(':contact', $contact);
+                $query->bindValue(':pre_address', $pre_address);
+                $query->bindValue(':perma_address', $perma_address);
+                $query->bindValue(':nid', $nid);
+                $query->bindValue(':f_name', $f_name);
+                $query->bindValue(':m_name', $m_name);
+                $query->bindValue(':photo', $photo);
+                $query->bindValue(':emr_contact', $emr_contact);
+                $query->execute();
+                $border_id = $connection->lastInsertId();
 
-            if($query->rowCount() === 1){
-                $msgs[] = "Border Added Successfully !";
-                $stmt = $connection->prepare("INSERT INTO `documents`(`border_id`,`nid`,`proof_photo`,`photo`) VALUES(:border_id,:nid,:proof_photo,:photo)");
-                $stmt->bindValue(':border_id', $border_id);
-                $stmt->bindValue(':nid', $nid);
-                $stmt->bindValue(':proof_photo', $proof_photo);
-                $stmt->bindValue(':photo', $photo);
-                $stmt->execute();
+                if($query->rowCount() === 1){
+                    //Documents insert
+                    $msgs[] = "Border Added Successfully !";
+                    $stmt = $connection->prepare("INSERT INTO `documents`(`border_id`,`nid`,`proof_photo`,`photo`) VALUES(:border_id,:nid,:proof_photo,:photo)");
+                    $stmt->bindValue(':border_id', $border_id);
+                    $stmt->bindValue(':nid', $nid);
+                    $stmt->bindValue(':proof_photo', $proof_photo);
+                    $stmt->bindValue(':photo', $photo);
+                    $stmt->execute();
 
-            }else{
-            $errors[] = "Border Not Added Successfully!";
+                    //Rooms update
+                    $r_qry = $connection->prepare("SELECT * FROM `rooms` WHERE `room_id` = :rid ");
+                    $r_qry->bindValue(':rid',$room_id);
+                    $r_qry->execute();
+                    $room = $r_qry->fetch();
+
+                    if($room['existing_border'] == 0){
+                            //no of border update
+                        $b_qry = $connection->prepare("UPDATE `rooms` SET `existing_border` = 1 WHERE `room_id` = :rid ");
+                        $b_qry->bindValue(':rid',$room_id);
+                        $b_qry->execute();
+                    
+                    }else if($room['existing_border'] > 0){
+                             //no of border update
+                           $room['existing_border']++;  
+                        $b_qry = $connection->prepare("UPDATE `rooms` SET `existing_border` = :existing_border WHERE `room_id` = :rid ");
+                        $b_qry->bindValue(':existing_border',$room['existing_border']);
+                        $b_qry->bindValue(':rid',$room_id);
+                        $b_qry->execute();
+                    }
+
+                }else{
+                $errors[] = "Border Not Added Successfully!";
+            }
         }
-    }
     }
     
 ?>
@@ -123,7 +145,9 @@
                                 <select name="room_id" class="form-control" required="required">
                                     <option">Select Room</option>
                                     <?php foreach ($rooms as $value): ?>
+                                        <?php if($value['existing_border'] < $value['max_border']  ){?>
                                         <option value="<?php echo $value['room_id']; ?>"> Room <?php echo $value['room_id']; ?></option>
+                                        <?php } ?>
                                     <?php endforeach ?>
                                 </select>
                             </div>
