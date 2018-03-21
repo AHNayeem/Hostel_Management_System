@@ -28,6 +28,11 @@ $r_qry = $connection->prepare("SELECT COUNT(*)FROM `borders`");
 $r_qry->execute();
 $b_num = $r_qry->fetchColumn();
 
+//Counting num of borders
+$doc = $connection->prepare("SELECT COUNT(*)FROM `documents`");
+$doc->execute();
+$doc = $doc->fetchColumn();
+
 ?>
 
 
@@ -52,7 +57,7 @@ $b_num = $r_qry->fetchColumn();
             <div class="widget-small warning coloured-icon"><i class="icon fa fa-files-o fa-3x"></i>
                 <div class="info">
                     <h4>Border Documents</h4>
-                    <p><b>10</b></p>
+                    <p><b><?php echo $doc ;?></b></p>
                 </div>
             </div>
         </div>
@@ -65,6 +70,30 @@ $b_num = $r_qry->fetchColumn();
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+          <div class="tile row">
+            <div class="col-md-3">
+              <div id="external-events">
+                <h4 class="mb-4">Draggable Events</h4>
+                <div class="fc-event">My Event 1</div>
+                <div class="fc-event">My Event 2</div>
+                <div class="fc-event">My Event 3</div>
+                <div class="fc-event">My Event 4</div>
+                <div class="fc-event">My Event 5</div>
+                <p class="animated-checkbox mt-20">
+                  <label>
+                    <input id="drop-remove" type="checkbox"><span class="label-text">Remove after drop</span>
+                  </label>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div id="calendar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="row">
         <div class="col-md-6">
             <div class="tile">

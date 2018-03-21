@@ -27,8 +27,11 @@ if(isset($_GET['border_id'])){
 		$qry->bindValue(':border_id', $_GET['border_id'],PDO::PARAM_INT);
 		$qry->execute();
 
+		if ($qry->rowCount() === 1) {
 		$msgs[] = "Border Deleted Successfully";
-
+		$stmt = $connection->prepare("ALTER TABLE `borders` AUTO_INCREMENT = 1");
+		$stmt->execute();
+	}
 		header('Location: borders.php');
 		
 	}

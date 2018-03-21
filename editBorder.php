@@ -7,12 +7,12 @@
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <div class="app-title">
         <div>
-            <h1><i class="fa fa-dashboard"></i> Add Border</h1>
+            <h1><i class="fa fa-dashboard"></i>Edit Border</h1>
             <p></p>
         </div>
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#">Edit Border</a></li>
         </ul>
     </div>
 
@@ -24,12 +24,11 @@
         $border = $query->fetch();
     }
 
-
     $stmt = $connection->prepare("SELECT * FROM `rooms`");
     $stmt->execute();
     $rooms = $stmt->fetchAll();
 
-    if(isset($_POST['add_border'])){
+    if(isset($_POST['update_border'])){
         $name = $_POST['name'];
         $room_id = $_POST['room_id'];
         $email = $_POST['email'];
@@ -37,7 +36,9 @@
         $pre_address = $_POST['pre_address'];
         $perma_address = $_POST['perma_address'];
         $nid = $_POST['nid'];
-
+        
+        if (!empty(($_FILES['photo']['tmp_name']) && ($_FILES['proof_photo']['tmp_name']))) {
+            
         $photo = $_FILES['photo']['name'];
         $proof_photo = $_FILES['proof_photo']['name'];
 
@@ -46,7 +47,7 @@
 
         move_uploaded_file($photo_tmp,"img/borders/$photo");
         move_uploaded_file($proof_photo_tmp,"img/Documents/$proof_photo");
-
+        }
         $f_name = $_POST['f_name'];
         $m_name = $_POST['m_name'];
         $emr_contact = $_POST['emr_contact'];
@@ -59,7 +60,8 @@
         }
 
         if (empty($errors)) {
-            $query = $connection->prepare("INSERT INTO `borders`(`name`,`room_id`,`email`,`contact`,`pre_address`,`perma_address`,`nid`,`f_name`,`m_name`,`photo`,`emr_contact`) VALUES(:name,:room_id,:email,:contact,:pre_address,:perma_address,:nid,:f_name,:m_name,:photo,:emr_contact)");
+            $query = $connection->prepare("UPDATE `borders` SET `name` = :name,`room_id` = :room_id,`email = :email`,`contact` = :contact,`pre_address` = :pre_address,`perma_address` = :perma_address,`nid` = :nid,`f_name` = :f_name,`m_name` = :m_name,`photo` = :photo,`emr_contact` = :emr_contact WHERE `border_id` = :border_id");
+            $query->bindValue(':border_id',$_GET['border_id'], PDO::PARAM_INT);
             $query->bindValue(':name',$name);
             $query->bindValue('room_id', $room_id);
             $query->bindValue(':email', $email);
@@ -75,8 +77,9 @@
             $border_id = $connection->lastInsertId();
 
             if($query->rowCount() === 1){
-                $msgs[] = "Border Added Successfully !";
-                $stmt = $connection->prepare("INSERT INTO `documents`(`border_id`,`nid`,`proof_photo`,`photo`) VALUES(:border_id,:nid,:proof_photo,:photo)");
+                $msgs[] = "Border Updated Successfully !";
+                $stmt = $connection->prepare("UPDATE `documents` SET `border_id` = :border_id,`nid` = :nid,`proof_photo` = :proof_photo,`photo` = :photo WHERE `border_id` = :b_id");
+                $stmt->bindValue(':b_id', $_GET['border_id'], PDO::PARAM_INT);
                 $stmt->bindValue(':border_id', $border_id);
                 $stmt->bindValue(':nid', $nid);
                 $stmt->bindValue(':proof_photo', $proof_photo);
@@ -84,7 +87,7 @@
                 $stmt->execute();
 
             }else{
-            $errors[] = "Border Not Added Successfully!";
+            $errors[] = "Border Not Updated Successfully!";
         }
     }
     }
@@ -115,19 +118,18 @@
             <?php } ?>
             <div class="tile">
                 <!-- <h3 class="tile-title">Register</h3> -->
-                <form class="form-horizontal" action="addBorder.php" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" action="borders.php" method="post" enctype="multipart/form-data">
                     <div class="tile-body">
                         <div class="form-group row">
                             <label class="control-label col-md-3">Name</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="name" type="text" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="name" type="text" value="<?php echo $border['name']; ?>">
                             </div>
                         </div>
-                        
                         <div class="form-group row">
                             <label class="control-label col-md-3">Room</label>
                             <div class="col-md-8">
-                                <select name="room_id" class="form-control" required="required">
+                                <select name="room_id" class="form-control">
                                     <option">Select Room</option>
                                     <?php foreach ($rooms as $value): ?>
                                         <option value="<?php echo $value['room_id']; ?>"> Room <?php echo $value['room_id']; ?></option>
@@ -138,49 +140,49 @@
                         <div class="form-group row">
                             <label class="control-label col-md-3">Email</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="email" type="email" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="email" type="email" value="<?php echo $border['email']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Contact No.</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="contact" type="number" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="contact" type="number" value="<?php echo $border['contact']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Present Address</label>
                             <div class="col-md-8">
-                                <textarea class="form-control" name="pre_address" rows="3" value="<?php echo value['']; ?>" required="required"></textarea>
+                                <textarea class="form-control" name="pre_address" rows="3"><?php echo $border['pre_address']; ?></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Parmanent Address</label>
                             <div class="col-md-8">
-                                <textarea class="form-control" name="perma_address" rows="3" value="<?php echo value['']; ?>" required="required"></textarea>
+                                <textarea class="form-control" name="perma_address" rows="3"><?php echo $border['perma_address']; ?></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">NID No.</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="nid" type="number" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="nid" type="number" value="<?php echo $border['nid']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Father Name</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="f_name" type="text" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="f_name" type="text" value="<?php echo $border['f_name']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Mother Name</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="m_name" type="text" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="m_name" type="text" value="<?php echo $border['m_name']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Emergency Contact</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="emr_contact" type="number" value="<?php echo value['']; ?>" required="required">
+                                <input class="form-control" name="emr_contact" type="number" value="<?php echo $border['emr_contact']; ?>">
                             </div>
                         </div>
                        <!-- <div class="form-group row">
@@ -201,13 +203,15 @@
                         <div class="form-group row">
                             <label class="control-label col-md-3">Border Photo</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="photo" type="file" required="required">
+                            <img width="100" class="img-fluid" src="img/borders/<?php echo $border['photo']; ?>" alt="Border Image">
+                                <input class="form-control" name="photo" type="file">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="control-label col-md-3">Picture Id </label>
                             <div class="col-md-8">
-                                <input class="form-control" name="proof_photo" type="file" required="required">
+                            <img width="100" class="img-fluid" src="img/Documents/<?php echo $border['proof_photo']; ?>" alt="Proof Photo">
+                                <input class="form-control" name="proof_photo" type="file">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -223,7 +227,7 @@
                     <div class="tile-footer">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-3">
-                                <button class="btn btn-primary" name="add_border" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="reset"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</button>
+                                <button class="btn btn-primary" name="update_border" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="reset"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</button>
                             </div>
                         </div>
                     </div>
